@@ -9,11 +9,22 @@ axs.clear()
 axs.axis('equal')
 
 
-dt = 0.1
-n = 60
-radials        = np.linspace(0.2, 3.1, n)
-eccentricities = np.linspace(0.03, 0.63, n)
-rotations      = np.linspace(0, 4.2*3.1416, n)
+dt = 30
+n = 100
+half_n = int(n/2)
+
+radials_1        = np.linspace(0.2, 3.1, half_n)
+eccentricities_1 = np.linspace(0.1, 0.15, half_n)
+rotations_1    = np.linspace(0, 2.2*3.1416, half_n)
+
+radials_2        = np.linspace(0.2, 3.1, n-half_n)
+eccentricities_2 = np.linspace(0.1, 0.15, n-half_n)
+rotations_2    = np.linspace(1*3.1416, 3.2*3.1416, n-half_n)
+
+
+radials        = np.concatenate((radials_1, radials_2))
+eccentricities = np.concatenate((eccentricities_1, eccentricities_2))
+rotations      = np.concatenate((rotations_1, rotations_2))
 
 ellipses = []
 stars = []
@@ -39,13 +50,14 @@ for star in stars:
 
 
 times = []
-for i in range(180):
+for i in range(111):
     toc = timeit.default_timer()
 
     # use arrays to store positions instead of drawing each star individually, speed up by 3.5x
     x = np.empty(len(stars))
     y = np.empty(len(stars))
 
+    # dt *=1.006
     for i, star in enumerate(stars):
         star.move(dt)
         xy = star.get_pos()
